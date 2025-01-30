@@ -1,0 +1,52 @@
+ximport { useState } from "react";
+
+export default function TipoutCalculator() {
+  const [totalSales, setTotalSales] = useState("");
+  const [netCashOwed, setNetCashOwed] = useState("");
+  const [barTipout, setBarTipout] = useState(null);
+  const [houseTipout, setHouseTipout] = useState(null);
+  const [totalDue, setTotalDue] = useState(null);
+
+  const calculateTipout = () => {
+    const sales = parseFloat(totalSales);
+    if (isNaN(sales)) return;
+    const bar = sales * 0.015;
+    const house = sales * 0.0575;
+    setBarTipout(bar.toFixed(2));
+    setHouseTipout(house.toFixed(2));
+  };
+
+  const calculateTotalDue = () => {
+    const netCash = parseFloat(netCashOwed);
+    const house = parseFloat(houseTipout);
+    if (isNaN(netCash) || isNaN(house)) return;
+    setTotalDue((netCash + house).toFixed(2));
+  };
+
+  return (
+    <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      <h2>Tipout Calculator</h2>
+      <label>
+        Total Sales:
+        <input type="number" value={totalSales} onChange={(e) => setTotalSales(e.target.value)} style={{ width: "100%", marginBottom: "10px" }} />
+      </label>
+      <button onClick={calculateTipout} style={{ width: "100%", padding: "10px", background: "#007BFF", color: "white", border: "none", cursor: "pointer" }}>Calculate Tipout</button>
+      {barTipout && houseTipout && (
+        <div>
+          <p>Bar Tipout: ${barTipout}</p>
+          <p>House Tipout: ${houseTipout}</p>
+        </div>
+      )}
+      {houseTipout && (
+        <>
+          <label>
+            Net Cash Owed:
+            <input type="number" value={netCashOwed} onChange={(e) => setNetCashOwed(e.target.value)} style={{ width: "100%", marginBottom: "10px" }} />
+          </label>
+          <button onClick={calculateTotalDue} style={{ width: "100%", padding: "10px", background: "#28A745", color: "white", border: "none", cursor: "pointer" }}>Calculate Total Due</button>
+          {totalDue && <p>Total Due: ${totalDue}</p>}
+        </>
+      )}
+    </div>
+  );
+}
